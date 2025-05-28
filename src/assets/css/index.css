@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+@layer components {
+  .chat-message {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  .typing-animation::after {
+    content: '|';
+    animation: blink 1s infinite;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .message-bubble {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  .sidebar-transition {
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    overflow: hidden;
+  }
+}
+
+@layer utilities {
+  @media (max-width: 768px) {
+    .sidebar-hidden {
+      transform: translateX(-100%);
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+} 
