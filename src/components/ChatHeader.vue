@@ -25,6 +25,11 @@
         {{ chatStore.currentChat?.title || '新对话' }}
       </span>
       
+      <!-- 用户信息 -->
+      <div class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
+        <span>{{ authStore.user?.username }}</span>
+      </div>
+      
       <!-- 深色模式切换按钮 -->
       <button 
         @click="uiStore.toggleTheme"
@@ -33,6 +38,14 @@
         <SunIcon v-if="uiStore.darkMode" class="w-5 h-5" />
         <MoonIcon v-else class="w-5 h-5" />
       </button>
+      
+      <!-- 退出登录按钮 -->
+      <button 
+        @click="handleLogout"
+        class="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-border rounded-lg transition-colors duration-200"
+        title="退出登录">
+        <LogoutIcon class="w-5 h-5" />
+      </button>
     </div>
   </div>
 </template>
@@ -40,11 +53,22 @@
 <script setup>
 import { useChatStore } from '@/stores/chat'
 import { useUIStore } from '@/stores/ui'
+import { useAuthStore } from '@/stores/auth'
 import MenuIcon from './icons/MenuIcon.vue'
 import ExpandIcon from './icons/ExpandIcon.vue'
 import SunIcon from './icons/SunIcon.vue'
 import MoonIcon from './icons/MoonIcon.vue'
+import LogoutIcon from './icons/LogoutIcon.vue'
 
 const chatStore = useChatStore()
 const uiStore = useUIStore()
+const authStore = useAuthStore()
+
+const handleLogout = () => {
+  authStore.logout()
+  // 清空聊天数据
+  chatStore.chatHistory = []
+  chatStore.chats = {}
+  chatStore.currentChatId = null
+}
 </script> 
