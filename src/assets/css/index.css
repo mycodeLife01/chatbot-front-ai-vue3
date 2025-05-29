@@ -1,3 +1,6 @@
+/* 导入highlight.js样式 - 使用GitHub风格 */
+@import 'highlight.js/styles/github.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -26,6 +29,90 @@ body {
   .message-bubble {
     word-wrap: break-word;
     white-space: pre-wrap;
+  }
+
+  /* Markdown内容样式 */
+  .markdown-content {
+    line-height: 1.4;
+    color: inherit;
+  }
+
+  .markdown-content p {
+    margin-bottom: 0.5rem;
+  }
+
+  .markdown-content p:last-child {
+    margin-bottom: 0;
+  }
+
+  .markdown-content pre {
+    margin: 0.5rem 0;
+    border-radius: 0.375rem;
+    overflow-x: auto;
+  }
+
+  .markdown-content code {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.9em;
+  }
+
+  .markdown-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  .markdown-content blockquote {
+    margin: 0.5rem 0;
+    padding: 0.5rem 0 0.5rem 1rem;
+  }
+
+  .markdown-content ul,
+  .markdown-content ol {
+    margin: 0.25rem 0;
+    padding-left: 1.25rem;
+  }
+
+  .markdown-content li {
+    margin-bottom: 0.125rem;
+  }
+
+  .markdown-content h1,
+  .markdown-content h2,
+  .markdown-content h3,
+  .markdown-content h4,
+  .markdown-content h5,
+  .markdown-content h6 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.25;
+  }
+
+  .markdown-content h1:first-child,
+  .markdown-content h2:first-child,
+  .markdown-content h3:first-child,
+  .markdown-content h4:first-child,
+  .markdown-content h5:first-child,
+  .markdown-content h6:first-child {
+    margin-top: 0;
+  }
+
+  .markdown-content strong {
+    font-weight: 600;
+  }
+
+  .markdown-content em {
+    font-style: italic;
+  }
+
+  /* 深色模式下的代码高亮调整 */
+  .dark .hljs {
+    background: #1f2937 !important;
+    color: #e5e7eb !important;
+  }
+
+  .dark .markdown-content pre {
+    background: #1f2937 !important;
   }
 
   .sidebar-transition {

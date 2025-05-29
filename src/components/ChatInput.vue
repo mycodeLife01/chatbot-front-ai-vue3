@@ -20,11 +20,11 @@
         </div>
       </div>
 
-      <div class="flex items-end space-x-3">
+      <div class="flex items-center space-x-3">
         <!-- 文件上传按钮 -->
         <button 
           @click="triggerFileInput"
-          class="p-3 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-border rounded-lg transition-colors duration-200"
+          class="p-2.5 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-border rounded-lg transition-colors duration-200 flex-shrink-0"
           title="上传文件">
           <AttachIcon class="w-5 h-5" />
         </button>
