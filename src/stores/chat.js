@@ -30,10 +30,10 @@ export const useChatStore = defineStore('chat', () => {
         chatsData.forEach(chat => {
           const processedChat = {
             id: chat.chat_id,
-            title: chat.title || '新对话',
+            title: chat.chat_name || '新对话',
             messages: [],
-            lastMessage: chat.updated_time, // 保持原始格式
-            createdAt: chat.created_time // 保持原始格式
+            lastMessage: chat.update_time,
+            createdAt: chat.create_time
           }
           
           chats.value[chat.chat_id] = processedChat
@@ -60,8 +60,7 @@ export const useChatStore = defineStore('chat', () => {
     try {
       console.log('开始创建新聊天')
       const chatData = {
-        title: '新对话',
-        description: ''
+        chat_name: '新对话'
       }
       
       const newChatResponse = await chatAPI.createChat(chatData)
@@ -69,10 +68,10 @@ export const useChatStore = defineStore('chat', () => {
       
       const newChat = {
         id: newChatResponse.chat_id,
-        title: newChatResponse.title,
+        title: newChatResponse.chat_name || '新对话',
         messages: [],
-        lastMessage: newChatResponse.updated_time, // 保持原始格式
-        createdAt: newChatResponse.created_time // 保持原始格式
+        lastMessage: newChatResponse.update_time, // 使用正确的字段名 update_time
+        createdAt: newChatResponse.create_time // 使用正确的字段名 create_time
       }
 
       chats.value[newChatResponse.chat_id] = newChat
@@ -183,7 +182,7 @@ export const useChatStore = defineStore('chat', () => {
     try {
       await chatAPI.updateChat({
         chat_id: chatId,
-        title: newTitle
+        chat_name: newTitle
       })
       
       if (chats.value[chatId]) {
