@@ -24,6 +24,12 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = { username: credentials.username }
         console.log('登录成功，状态已更新')
         return response
+      } else if (response.code === 2003) {
+        console.log("服务端返回：" + response.code);
+        throw new Error('用户密码错误')
+      } else if (response.code === 2002) {
+        console.log("服务端返回：" + response.code);
+        throw new Error('用户不存在')
       } else {
         throw new Error('未收到有效的访问令牌')
       }
@@ -49,6 +55,9 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = { username: userData.username }
         console.log('注册成功，状态已更新')
         return response
+      } else if (response.code === 2001) {
+        console.log("服务端返回：" + response.code);
+        throw new Error('用户已存在')
       } else {
         throw new Error('未收到有效的访问令牌')
       }

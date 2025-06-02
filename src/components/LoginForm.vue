@@ -118,6 +118,10 @@ const handleSubmit = async () => {
       error.value = '两次输入的密码不一致'
       return
     }
+    if (form.username.length < 4) {
+      error.value = '用户名长度至少为4位'
+      return
+    }
     if (form.password.length < 6) {
       error.value = '密码长度至少为6位'
       return
@@ -140,7 +144,8 @@ const handleSubmit = async () => {
       console.log('调用注册方法')
       result = await authStore.register({
         username: form.username,
-        password: form.password
+        password: form.password,
+        repeat_password: form.confirmPassword
       })
       console.log('注册调用完成，结果:', result)
     }

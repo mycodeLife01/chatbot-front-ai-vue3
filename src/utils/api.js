@@ -202,9 +202,58 @@ export const messageAPI = {
     return await apiFormRequest('/messages/add', formData)
   },
 
-  // 获取AI回复
+  // 获取AI回复（原有方法，保留作为备用）
   getAIResponse: async (chatId) => {
     return await apiRequest(`/messages/ai-response?chat_id=${chatId}`)
+  },
+
+  // SSE流式获取AI回复
+  streamAIResponse: (chatId, onChunk, onComplete, onError) => {
+    const token = getToken()
+    const url = new URL(`${API_BASE_URL}/messages/ai-response`)
+    url.searchParams.append('chat_id', chatId)
+    
+    // 通过URL参数传递token（因为EventSource不支持自定义headers）
+    if (token) {
+      url.searchParams.append('token', token)
+    }
+    
+    const eventSource = new EventSource(url.toString(), {
+      withCredentials: false
+    })
+    
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data)
+        console.log('SSE收到数据:', data)
+        
+        if (data.type === 'chunk') {
+          onChunk(data.content, data.message_id, data.full_content)
+        } else if (data.type === 'done') {
+          onComplete(data.full_content, data.message_id)
+          eventSource.close()
+        } else if (data.type === 'error') {
+          onError(data.message)
+          eventSource.close()
+        }
+      } catch (error) {
+        console.error('解析SSE数据失败:', error)
+        onError('解析服务器响应失败')
+        eventSource.close()
+      }
+    }
+    
+    eventSource.onerror = (error) => {
+      console.error('SSE连接错误:', error)
+      onError('连接错误，请重试')
+      eventSource.close()
+    }
+    
+    eventSource.onopen = () => {
+      console.log('SSE连接已建立')
+    }
+    
+    return eventSource // 返回以便手动关闭
   }
 }
 

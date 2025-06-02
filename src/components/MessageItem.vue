@@ -20,17 +20,35 @@
         </div>
         <div>
           <div class="bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-lg px-3 py-2 message-bubble">
+            <!-- 流式输入中的状态 -->
+            <div v-if="message.isStreaming" class="flex items-start">
+              <div 
+                class="markdown-content flex-1"
+                v-html="renderedContent"
+              ></div>
+              <div class="typing-indicator ml-2 flex-shrink-0">
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+              </div>
+            </div>
+            <!-- 正常显示状态 -->
             <div 
-              v-if="!message.isTyping"
+              v-else
               class="markdown-content"
               v-html="renderedContent"
             ></div>
-            <span v-else :class="message.isTyping ? 'typing-animation' : ''">
-              {{ message.content }}
-            </span>
           </div>
-          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center">
             {{ formatTime(message.timestamp) }}
+            <!-- 流式状态指示 -->
+            <span v-if="message.isStreaming" class="ml-2 text-green-500">
+              正在输入...
+            </span>
+            <!-- 错误状态指示 -->
+            <span v-if="message.isError" class="ml-2 text-red-500">
+              回复失败
+            </span>
           </div>
         </div>
       </div>
@@ -53,17 +71,82 @@ const props = defineProps({
 
 // 计算渲染后的Markdown内容
 const renderedContent = computed(() => {
-  if (props.message.role === 'assistant' && !props.message.isTyping) {
-    const content = props.message.content
-    
-    // 确保内容是字符串
-    if (typeof content !== 'string') {
-      console.error('消息内容不是字符串:', content, typeof content)
-      return String(content || '内容格式错误')
-    }
-    
-    return renderMarkdown(content)
-  }
-  return props.message.content
+  if (!props.message.content) return ''
+  return renderMarkdown(props.message.content)
 })
-</script> 
+</script>
+
+<style scoped>
+.message-bubble {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* 打字机指示器样式 */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.typing-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #9ca3af;
+  animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes typing {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Markdown内容样式 */
+.markdown-content {
+  line-height: 1.6;
+}
+
+.markdown-content :deep(p) {
+  margin: 0 0 0.5em 0;
+}
+
+.markdown-content :deep(p:last-child) {
+  margin-bottom: 0;
+}
+
+.markdown-content :deep(code) {
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.markdown-content :deep(pre) {
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 0.5em;
+  border-radius: 5px;
+  overflow-x: auto;
+  margin: 0.5em 0;
+}
+
+.markdown-content :deep(pre code) {
+  background-color: transparent;
+  padding: 0;
+}
+</style> 

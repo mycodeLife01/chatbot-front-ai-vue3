@@ -1,6 +1,6 @@
 {
-  "name": "chatbot-vue3",
-  "version": "1.0.0",
+  "name": "ailura-bot",
+  "version": "0.0.1",
   "type": "module",
   "description": "AI聊天机器人 - Vue 3项目",
   "scripts": {
