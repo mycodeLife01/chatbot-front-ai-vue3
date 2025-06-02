@@ -1,5 +1,5 @@
 // API基础配置
-const API_BASE_URL = 'http://localhost:8000'
+const API_BASE_URL = ''
 
 // 本地存储的token key
 const TOKEN_KEY = 'chatbot_token'
@@ -210,7 +210,19 @@ export const messageAPI = {
   // SSE流式获取AI回复
   streamAIResponse: (chatId, onChunk, onComplete, onError) => {
     const token = getToken()
-    const url = new URL(`${API_BASE_URL}/messages/ai-response`)
+    
+    // 构造完整的URL
+    let fullUrl
+    if (API_BASE_URL) {
+      // 如果有基础URL，使用绝对路径
+      fullUrl = `${API_BASE_URL}/messages/ai-response`
+    } else {
+      // 如果没有基础URL，使用相对路径基于当前页面
+      const currentURL = new URL(window.location.href)
+      fullUrl = `${currentURL.protocol}//${currentURL.host}/messages/ai-response`
+    }
+    
+    const url = new URL(fullUrl)
     url.searchParams.append('chat_id', chatId)
     
     // 通过URL参数传递token（因为EventSource不支持自定义headers）
